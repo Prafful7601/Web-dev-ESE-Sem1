@@ -1,0 +1,113 @@
+/* Global theme: white, blue, black */
+:root {
+  --color-bg: #ffffff;           /* white */
+  --color-text: #0d0d0d;         /* near black */
+  --color-text-muted: #555555;
+  --color-primary: #0a66c2;      /* blue */
+  --color-primary-700: #084c91;  /* darker blue */
+  --color-accent: #0f0220;       /* deep black/indigo used in header */
+  --color-surface: #ffffff;
+  --color-surface-alt: #f2f6fb;  /* very light blue tint */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+  --radius: 12px;
+}
+
+/* Base */
+html, body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--color-accent);
+  color: #ffffff;
+}
+.navbar .logo {
+  color: #ffffff;
+}
+.navbar a {
+  color: #ffffff;
+}
+.navbar a:hover {
+  color: #cfe6ff;
+}
+
+/* Headings and text */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-accent);
+}
+
+p { color: var(--color-text); }
+.muted { color: var(--color-text-muted); }
+
+/* Buttons */
+.btn-primary {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+.btn-primary:hover {
+  background: var(--color-primary-700);
+}
+.btn-secondary {
+  background: #ffffff;
+  color: var(--color-accent);
+  border: 1px solid var(--color-primary);
+}
+.btn-secondary:hover {
+  background: #f7fbff;
+}
+
+/* Sections */
+.hero {
+  background: linear-gradient(180deg, var(--color-accent) 0%, #0a0a12 100%);
+  color: #ffffff;
+}
+.hero h1 span,
+.second-section h2 span { color: var(--color-primary); }
+
+.second-section { background: var(--color-surface); }
+.card-placeholder { background: var(--color-surface-alt); }
+
+/* Cards and containers */
+.card, .service, .member, .contact-box, .post, .mission {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Links */
+a { color: var(--color-primary); }
+a:hover { color: var(--color-primary-700); }
+
+/* Ensure scoped links use theme blue, overriding page-specific rules */
+.member a,
+.back-link {
+  color: var(--color-primary);
+}
+.member a:hover,
+.back-link:hover {
+  color: var(--color-primary-700);
+}
+
+/* Forms */
+input, textarea {
+  border: 1px solid #c9d6e6;
+}
+button { background: var(--color-primary); }
+button:hover { background: var(--color-primary-700); }
+
+/* Utilities */
+.bg-accent { background: var(--color-accent); color: #fff; }
+.bg-primary { background: var(--color-primary); color: #fff; }
+.text-accent { color: var(--color-accent); }
+.text-primary { color: var(--color-primary); }
+
+/* Service icons use primary blue */
+.icon { background: var(--color-primary); }
+
+

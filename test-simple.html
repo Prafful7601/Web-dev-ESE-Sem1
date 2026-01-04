@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Simple Flow</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        /* Hide radio inputs */
+        input[type="radio"] {
+            display: none;
+        }
+        
+        /* Hide pages by default */
+        .page {
+            display: none;
+        }
+        
+        /* Show pages when radio is checked */
+        #page1:checked ~ .page1,
+        #page2:checked ~ .page2,
+        #page3:checked ~ .page3 {
+            display: block;
+        }
+        
+        .success {
+            text-align: center;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <!-- Radio buttons for page control -->
+    <input type="radio" name="page" id="page1" checked>
+    <input type="radio" name="page" id="page2">
+    <input type="radio" name="page" id="page3">
+    
+    <div class="container">
+        <!-- Page 1: Login -->
+        <div class="page page1">
+            <h2>Login</h2>
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+            <label for="page2">
+                <button type="button">Login</button>
+            </label>
+        </div>
+        
+        <!-- Page 2: Contact -->
+        <div class="page page2">
+            <h2>Contact Form</h2>
+            <input type="text" placeholder="Name" required>
+            <input type="email" placeholder="Email" required>
+            <input type="text" placeholder="Message" required>
+            <label for="page3">
+                <button type="button">Submit</button>
+            </label>
+        </div>
+        
+        <!-- Page 3: Thank You -->
+        <div class="page page3">
+            <h2 class="success">✓ Thank You!</h2>
+            <p>Your message has been sent.</p>
+            <label for="page1">
+                <button type="button">Back to Login</button>
+            </label>
+        </div>
+    </div>
+</body>
+</html>
+

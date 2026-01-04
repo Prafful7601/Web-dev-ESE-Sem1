@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Account</title>
+<style>
+  body { font-family: Arial, sans-serif; background:#f9f9f9; color:#333; margin:40px; }
+  .card { max-width:420px; margin:20px auto; background:#fff; padding:20px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.1); }
+  h2 { margin:0 0 12px; color:#2a0f6d; }
+  label { display:block; margin:8px 0 4px; font-size:14px; }
+  input { width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; font-size:14px; }
+  button { background:#2a0f6d; color:#fff; padding:10px 14px; border:0; border-radius:8px; cursor:pointer; margin-top:10px; }
+  button:hover { background:#1a084d; }
+  .tabs { display:flex; gap:8px; justify-content:center; margin-bottom:12px; }
+  .tab { background:#eee; color:#333; border-radius:999px; padding:6px 12px; cursor:pointer; }
+  .tab.active { background:#2a0f6d; color:#fff; }
+  .status { min-height:20px; margin-top:8px; font-size:14px; }
+  .ok { color:green; }
+  .err { color:#c00; }
+  .row { display:grid; gap:8px; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="tabs">
+    <div id="tabLogin" class="tab active">Login</div>
+    <div id="tabRegister" class="tab">Register</div>
+  </div>
+
+  <!-- Login -->
+  <div id="loginBox" class="row">
+    <h2>Login</h2>
+    <label>Email</label>
+    <input id="loginEmail" type="email" placeholder="you@example.com" />
+    <label>Password</label>
+    <input id="loginPassword" type="password" placeholder="Your password" />
+    <a href="#" id="forgotPasswordLink" style="font-size:13px; color:#7d5fff; cursor:pointer; display:block; margin-bottom:8px;">Forgot Password?</a>
+    <button id="loginBtn">Login</button>
+    <div id="loginStatus" class="status"></div>
+  </div>
+
+  <!-- Register -->
+  <div id="registerBox" class="row hidden">
+    <h2>Create account</h2>
+    <label>Name</label>
+    <input id="regName" placeholder="Your name" />
+    <label>Email</label>
+    <input id="regEmail" type="email" placeholder="you@example.com" />
+    <label>Password</label>
+    <input id="regPassword" type="password" placeholder="Choose a password" />
+    <button id="registerBtn">Register</button>
+    <div id="registerStatus" class="status"></div>
+  </div>
+</div>
+
+<!-- Reset Password box (single copy, starts hidden) -->
+<div id="forgotBox" class="card hidden" style="max-width:420px; margin:20px auto;">
+  <h2>Reset Password</h2>
+  <label>Enter your email</label>
+  <input id="forgotEmail" type="email" placeholder="you@example.com"/>
+  <button id="forgotBtn">Send Reset Link</button>
+  <div id="forgotStatus" class="status"></div>
+  <button id="backToLogin" style="margin-top:10px;">Back to Login</button>
+</div>
+
+<!-- Me card -->
+<div id="meCard" class="card row hidden">
+  <h2>Your account</h2>
+  <div id="meInfo">Not logged in</div>
+  <button id="logoutBtn">Logout</button>
+</div>
+
+<script>
+(function(){
+  const API = "http://localhost:4000/api";
+  const $ = (id) => document.getElementById(id);
+
+  // Tabs
+  const tabLogin = $("tabLogin");
+  const tabRegister = $("tabRegister");
+  const loginBox = $("loginBox");
+  const registerBox = $("registerBox");
+  const forgotBox = $("forgotBox");
+
+  function showLogin(){
+    tabLogin.classList.add("active");
+    tabRegister.classList.remove("active");
+    loginBox.classList.remove("hidden");
+    registerBox.classList.add("hidden");
+    forgotBox.classList.add("hidden");
+  }
+  function showRegister(){
+    tabRegister.classList.add("active");
+    tabLogin.classList.remove("active");
+    registerBox.classList.remove("hidden");
+    loginBox.classList.add("hidden");
+    forgotBox.classList.add("hidden");
+  }
+  tabLogin.onclick = showLogin;
+  tabRegister.onclick = showRegister;
+
+  // Helpers
+  function setStatus(el, msg, ok){
+    el.textContent = msg || "";
+    el.className = "status " + (ok ? "ok" : "err");
+  }
+  function saveToken(t){ localStorage.setItem("token", t); }
+  function getToken(){ return localStorage.getItem("token"); }
+  function clearToken(){ localStorage.removeItem("token"); }
+
+  // Forgot password wiring (outside login handler so it works immediately)
+  $("forgotPasswordLink").addEventListener("click", function(e){
+    e.preventDefault();
+    loginBox.classList.add("hidden");
+    registerBox.classList.add("hidden");
+    forgotBox.classList.remove("hidden");
+  });
+  $("backToLogin").addEventListener("click", function(){
+    showLogin();
+  });
+  $("forgotBtn").addEventListener("click", async function(){
+    const email = ($("forgotEmail").value || "").trim();
+    if (!email) return setStatus($("forgotStatus"), "Enter your email", false);
+    try {
+      const res = await fetch(API + "/auth/forgot", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      if (!res.ok) return setStatus($("forgotStatus"), data.error || "Error", false);
+      setStatus($("forgotStatus"), "Reset link sent. Check your email or backend console.", true);
+    } catch {
+      setStatus($("forgotStatus"), "Network issue. Try again.", false);
+    }
+  });
+
+  // Register
+  $("registerBtn").onclick = async () => {
+    const name = $("regName").value.trim();
+    const email = $("regEmail").value.trim();
+    const password = $("regPassword").value;
+    if(!name || !email || !password){
+      return setStatus($("registerStatus"), "Fill name, email, password", false);
+    }
+    const btn = $("registerBtn");
+    btn.disabled = true;
+    try{
+      const res = await fetch(API + "/auth/register", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ name, email, password })
+      });
+      const data = await res.json();
+      if(!res.ok){
+        setStatus($("registerStatus"), data.error || "Could not register", false);
+      } else {
+        saveToken(data.token);
+        setStatus($("registerStatus"), "Registered. Redirecting...", true);
+        setTimeout(() => { window.location.href = "index.html"; }, 500);
+      }
+    }catch(e){
+      setStatus($("registerStatus"), "Network problem. Is backend running?", false);
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
+  // Login
+  $("loginBtn").onclick = async () => {
+    const email = $("loginEmail").value.trim();
+    const password = $("loginPassword").value;
+    if(!email || !password){
+      return setStatus($("loginStatus"), "Fill email and password", false);
+    }
+    const btn = $("loginBtn");
+    btn.disabled = true;
+    try{
+      const res = await fetch(API + "/auth/login", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if(!res.ok){
+        setStatus($("loginStatus"), data.error || "Invalid credentials", false);
+      } else {
+        saveToken(data.token);
+        setStatus($("loginStatus"), "Logged in. Redirecting...", true);
+        setTimeout(() => { window.location.href = "index.html"; }, 500);
+      }
+    }catch(e){
+      setStatus($("loginStatus"), "Network problem. Is backend running?", false);
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
+  // Me + logout
+  const meCard = $("meCard");
+  const meInfo = $("meInfo");
+  $("logoutBtn").onclick = () => {
+    clearToken();
+    meInfo.textContent = "Not logged in";
+    meCard.classList.add("hidden");
+  };
+
+  async function refreshMe(){
+    const token = getToken();
+    if(!token){ meCard.classList.add("hidden"); return; }
+    try{
+      const res = await fetch(API + "/auth/me", { headers:{ Authorization: "Bearer " + token }});
+      if(!res.ok){ meCard.classList.add("hidden"); return; }
+      const { user } = await res.json();
+      meInfo.textContent = `Hello, ${user.name} (${user.email})`;
+      meCard.classList.remove("hidden");
+    }catch{
+      meCard.classList.add("hidden");
+    }
+  }
+
+  // Start on Login tab and hide reset box
+  showLogin();
+  refreshMe();
+})();
+</script>
+</body>
+</html>

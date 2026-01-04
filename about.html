@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - Web Genisis</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #0f0220;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .intro {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 17px;
+      padding: 20px;
+    }
+    .mission {
+      background: #fff;
+      padding: 20px;
+      margin: 40px auto;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 850px;
+    }
+    .mission h2 {
+      color: #2a0f6d;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .team-values {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card h3 {
+      color: #2a0f6d;
+      margin-bottom: 10px;
+    }
+    .cta-button {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 12px 20px;
+      background-color: #2a0f6d;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 18px;
+      transition: background-color 0.3s;
+    }
+    .cta-button:hover {
+      background-color: #634ae2;
+    }
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      background-color: #0f0220;
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    .navbar .logo {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .navbar ul {
+      display: flex;
+      list-style: none;
+      gap: 25px;
+      margin: 0;
+      padding: 0;
+    }
+    .navbar ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-size: 14px;
+    }
+    .navbar ul li a.active {
+      color: #7d5fff; /* Highlight active page */
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">Web Genisis</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="service.html">Services</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+
+  <h1>About Us</h1>
+
+  <p class="intro">
+    Welcome to <strong>Web Genisis</strong> — your trusted partner in digital transformation.  
+    We specialize in delivering cutting-edge IT solutions that empower businesses to thrive in today’s fast-paced world.  
+    With expertise in <em>frontend, backend, full-stack development, database management, and enterprise software solutions</em>,  
+    Web Genisis helps organizations stay ahead of the curve.
+  </p>
+
+  <div class="mission">
+    <h2>Our Mission</h2>
+    <p>
+      At Web Genisis, our mission is simple — to provide innovative, reliable, and scalable technology solutions tailored  
+      to every client’s unique needs. Whether it’s building a responsive web app, managing enterprise-level databases,  
+      or creating powerful full-stack solutions, we are committed to excellence at every step.
+    </p>
+  </div>
+
+  <div class="team-values">
+    <div class="card">
+      <h3>Innovation</h3>
+      <p>We embrace the latest technologies to craft forward-thinking solutions that give our clients a competitive edge.</p>
+    </div>
+    <div class="card">
+      <h3>Expertise</h3>
+      <p>Our team brings deep expertise in frontend, backend, databases, and enterprise software to ensure robust solutions.</p>
+    </div>
+    <div class="card">
+      <h3>Collaboration</h3>
+      <p>We work closely with clients to understand their vision, tailoring strategies that align with their goals.</p>
+    </div>
+    <div class="card">
+      <h3>Reliability</h3>
+      <p>With a strong focus on quality and scalability, our solutions are built to last and grow with your business.</p>
+    </div>
+  </div>
+
+  <a href="contact.html" class="cta-button">Want to Learn More? Contact Us</a>
+
+</body>
+</html>
