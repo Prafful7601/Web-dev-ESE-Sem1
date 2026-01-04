@@ -147,106 +147,57 @@
     </div>
 
     <!-- Contact Form -->
-    <form static-form static-form-id="webgenisis-contact">
+    <form id="contactForm">
+  <!-- Name -->
+  <label>Your Name</label>
+  <input type="text" name="name" placeholder="Full name" required />
 
-      <!-- Name -->
-      <label>Your Name</label>
-      <input
-        type="text"
-        name="name"
-        placeholder="Full name"
-        required
-        minlength="2"
-        pattern="[A-Za-z ]+"
-      />
+  <!-- Email -->
+  <label>Email Address</label>
+  <input type="email" name="email" placeholder="you@example.com" required />
 
-      <!-- Email -->
-      <label>Email Address</label>
-      <input
-        type="email"
-        name="email"
-        placeholder="you@example.com"
-        required
-      />
+  <!-- Phone -->
+  <label>Phone Number</label>
+  <input type="tel" name="phone" placeholder="10 digit mobile number" required />
 
-      <!-- Phone -->
-      <label>Phone Number</label>
-      <input
-        type="tel"
-        name="phone"
-        placeholder="10 digit mobile number"
-        required
-        pattern="[0-9]{10}"
-      />
+  <!-- Address -->
+  <label>Address</label>
+  <input type="text" name="address" placeholder="Street, Area" required />
 
-      <!-- Address -->
-      <label>Address</label>
-      <input
-        type="text"
-        name="address"
-        placeholder="Street, Area"
-        required
-      />
+  <!-- City -->
+  <label>City</label>
+  <input type="text" name="city" placeholder="City name" required />
 
-      <!-- City -->
-      <label>City</label>
-      <input
-        type="text"
-        name="city"
-        placeholder="City name"
-        required
-        pattern="[A-Za-z ]+"
-      />
+  <!-- Service -->
+  <label>Service Type</label>
+  <select name="service" required>
+    <option value="">Select a service</option>
+    <option>Frontend Development</option>
+    <option>Backend Development</option>
+    <option>Full Stack Solutions</option>
+    <option>Database Management</option>
+    <option>Company Software Management</option>
+  </select>
 
-      <!-- Service -->
-      <label>Service Type</label>
-      <select name="service" required>
-        <option value="">Select a service</option>
-        <option>Frontend Development</option>
-        <option>Backend Development</option>
-        <option>Full Stack Solutions</option>
-        <option>Database Management</option>
-        <option>Company Software Management</option>
-      </select>
+  <!-- Budget -->
+  <label>Budget (INR)</label>
+  <input type="number" name="budget" placeholder="Minimum 1000" required />
 
-      <!-- Budget -->
-      <label>Budget (INR)</label>
-      <input
-        type="number"
-        name="budget"
-        placeholder="Minimum 1000"
-        required
-        min="1000"
-      />
+  <!-- Deadline -->
+  <label>Project Deadline</label>
+  <input type="date" name="deadline" required />
 
-      <!-- Deadline -->
-      <label>Project Deadline</label>
-      <input
-        type="date"
-        name="deadline"
-        required
-      />
+  <!-- Message -->
+  <label>Project Details</label>
+  <textarea name="message" rows="5" placeholder="Describe your project" required></textarea>
 
-      <!-- Message -->
-      <label>Project Details</label>
-      <textarea
-        name="message"
-        rows="5"
-        placeholder="Describe your project in detail"
-        required
-        minlength="15"
-      ></textarea>
+  <!-- Honeypot -->
+  <input type="text" id="companyField" name="company" style="display:none">
 
-      <!-- Honeypot -->
-      <input type="text" name="company" style="display:none">
+  <button id="contactSubmit" type="submit">Send Message</button>
+  <p id="contactStatus"></p>
+</form>
 
-      <button type="submit">Send Message</button>
-
-      <p class="note">
-        After submission, you will be redirected automatically.
-      </p>
-
-    </form>
     <!-- Thank You Message (Hidden by default) -->
     <div class="thank-you-message">
       <h3>Thank you for reaching out!</h3>
@@ -255,136 +206,104 @@
 
   </div>
 <script>
-(function () {
+document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("contactForm");
-  const statusEl = document.getElementById("contactStatus");
   const btn = document.getElementById("contactSubmit");
+  const status = document.getElementById("contactStatus");
+  const honeypot = document.getElementById("companyField");
+
   const API_URL = "http://localhost:4000/api/forms/contact";
 
-  function setStatus(msg, isOk) {
-    statusEl.textContent = msg;
-    statusEl.style.color = isOk ? "green" : "red";
+  function error(msg) {
+    status.textContent = msg;
+    status.style.color = "red";
   }
 
-  // Strong email regex (not perfect, but very good)
-  const emailRegex =
-    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-  // Name: letters + spaces only
-  const nameRegex = /^[A-Za-z ]{2,}$/;
-
-  // City: letters only
-  const cityRegex = /^[A-Za-z ]{2,}$/;
-
-  // Phone: exactly 10 digits
-  const phoneRegex = /^[0-9]{10}$/;
-
-  // Optional: plug any external email verification API here
-  async function verifyEmailAPI(email) {
-    // Dummy (always returns true). You can integrate real API like UseBouncer, Clearout, etc.
-    return true;
+  function success(msg) {
+    status.textContent = msg;
+    status.style.color = "green";
   }
 
-  form.addEventListener("submit", async function (e) {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // Honeypot
+    if (honeypot.value) return;
+
+    const data = new FormData(form);
+
     const payload = {
-      name: form.name.value.trim(),
-      email: form.email.value.trim(),
-      phone: form.phone.value.trim(),
-      address: form.address.value.trim(),
-      city: form.city.value.trim(),
-      service: form.service.value,
-      budget: Number(form.budget.value),
-      deadline: form.deadline.value,
-      message: form.message.value.trim(),
+      name: data.get("name").trim(),
+      email: data.get("email").trim(),
+      phone: data.get("phone").trim(),
+      address: data.get("address").trim(),
+      city: data.get("city").trim(),
+      service: data.get("service"),
+      budget: Number(data.get("budget")),
+      deadline: data.get("deadline"),
+      message: data.get("message").trim(),
+      submittedAt: new Date().toISOString()
     };
 
-    // Honeypot
-    if (document.getElementById("companyField").value) {
-      setStatus("Something went wrong. Please try again.", false);
-      return;
-    }
+    /* VALIDATIONS */
+    if (!/^[A-Za-z ]{2,}$/.test(payload.name))
+      return error("Enter a valid name");
 
-    // ====================== VALIDATIONS ======================
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email))
+      return error("Invalid email");
 
-    if (!nameRegex.test(payload.name)) {
-      return setStatus(
-        "Please enter a valid name (letters only, min 2 chars).",
-        false
-      );
-    }
+    if (!/^[0-9]{10}$/.test(payload.phone))
+      return error("Phone must be 10 digits");
 
-    if (!emailRegex.test(payload.email)) {
-      return setStatus("Enter a valid email address.", false);
-    }
+    if (!/^[A-Za-z ]{2,}$/.test(payload.city))
+      return error("Invalid city");
 
-    // Optional: external email verification
-    const isRealEmail = await verifyEmailAPI(payload.email);
-    if (!isRealEmail) {
-      return setStatus("This email does not appear to be real.", false);
-    }
+    if (!payload.service)
+      return error("Select a service");
 
-    if (!phoneRegex.test(payload.phone)) {
-      return setStatus("Enter a valid 10-digit phone number.", false);
-    }
+    if (!payload.budget || payload.budget < 1000)
+      return error("Budget must be at least 1000");
 
-    if (!cityRegex.test(payload.city)) {
-      return setStatus("City should only contain letters.", false);
-    }
+    if (!payload.deadline)
+      return error("Select a deadline");
 
-    if (payload.budget <= 1000 || isNaN(payload.budget)) {
-      return setStatus("Enter a valid budget above 0.", false);
-    }
+    const today = new Date();
+    today.setHours(0,0,0,0);
 
-    // Deadline must be in future
-    const today = new Date().setHours(0, 0, 0, 0);
-    const deadline = new Date(payload.deadline).setHours(0, 0, 0, 0);
+    const deadline = new Date(payload.deadline);
+    deadline.setHours(0,0,0,0);
 
-    if (!payload.deadline) {
-      return setStatus("Please select a deadline.", false);
-    }
+    if (deadline <= today)
+      return error("Deadline must be in future");
 
-    if (deadline <= today) {
-      return setStatus("Deadline must be a future date.", false);
-    }
-
-    if (payload.message.length < 15) {
-      return setStatus("Message should be at least 15 characters.", false);
-    }
-
-    // ==========================================================
+    if (payload.message.length < 15)
+      return error("Message too short");
 
     btn.disabled = true;
-    btn.textContent = "Sending...";
-    setStatus("", true);
+    btn.textContent = "Submitting...";
 
     try {
       const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
       });
 
-      const data = await res.json();
+      if (!res.ok) throw new Error();
 
-      if (!res.ok) {
-        setStatus(data.error || "Server error. Try again.", false);
-      } else {
-        setStatus("Thanks. We received your message.", true);
-        alert("Form submitted successfully!");
-        form.reset();
-      }
-    } catch (err) {
-      console.error(err);
-      setStatus("Network error. Backend not responding.", false);
-    } finally {
+      sessionStorage.setItem(
+        "formSuccessMessage",
+        "Your response has been recorded successfully."
+      );
+
+      window.location.href = "index.html";
+
+    } catch {
+      error("Submission failed. Try again.");
       btn.disabled = false;
       btn.textContent = "Send Message";
     }
   });
-})();
+});
 </script>
 
-</body>
-</html>
