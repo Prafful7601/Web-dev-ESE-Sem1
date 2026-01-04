@@ -354,5 +354,15 @@
   checkLogin();
 </script>
 
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const msg = sessionStorage.getItem("formSuccessMessage");
+  if (msg) {
+    alert(msg);
+    sessionStorage.removeItem("formSuccessMessage");
+  }
+});
+</script>
+
 </body>
 </html>
