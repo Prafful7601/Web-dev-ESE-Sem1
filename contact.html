@@ -147,26 +147,60 @@
     </div>
 
     <!-- Contact Form -->
-    <form id="contactForm">
+  <form
+  id="contactForm"
+  action="https://formspree.io/f/mpqwbjjg"
+  method="POST"
+>
+
   <!-- Name -->
   <label>Your Name</label>
-  <input type="text" name="name" placeholder="Full name" required />
+  <input
+    type="text"
+    name="name"
+    placeholder="Full name"
+    required
+    minlength="2"
+    pattern="[A-Za-z ]+"
+  />
 
   <!-- Email -->
   <label>Email Address</label>
-  <input type="email" name="email" placeholder="you@example.com" required />
+  <input
+    type="email"
+    name="email"
+    placeholder="you@example.com"
+    required
+  />
 
   <!-- Phone -->
   <label>Phone Number</label>
-  <input type="tel" name="phone" placeholder="10 digit mobile number" required />
+  <input
+    type="tel"
+    name="phone"
+    placeholder="10 digit mobile number"
+    required
+    pattern="[0-9]{10}"
+  />
 
   <!-- Address -->
   <label>Address</label>
-  <input type="text" name="address" placeholder="Street, Area" required />
+  <input
+    type="text"
+    name="address"
+    placeholder="Street, Area"
+    required
+  />
 
   <!-- City -->
   <label>City</label>
-  <input type="text" name="city" placeholder="City name" required />
+  <input
+    type="text"
+    name="city"
+    placeholder="City name"
+    required
+    pattern="[A-Za-z ]+"
+  />
 
   <!-- Service -->
   <label>Service Type</label>
@@ -181,21 +215,49 @@
 
   <!-- Budget -->
   <label>Budget (INR)</label>
-  <input type="number" name="budget" placeholder="Minimum 1000" required />
+  <input
+    type="number"
+    name="budget"
+    placeholder="Minimum 1000"
+    required
+    min="1000"
+  />
 
   <!-- Deadline -->
   <label>Project Deadline</label>
-  <input type="date" name="deadline" required />
+  <input
+    type="date"
+    name="deadline"
+    required
+  />
 
   <!-- Message -->
   <label>Project Details</label>
-  <textarea name="message" rows="5" placeholder="Describe your project" required></textarea>
+  <textarea
+    name="message"
+    rows="5"
+    placeholder="Describe your project"
+    required
+    minlength="15"
+  ></textarea>
 
-  <!-- Honeypot -->
-  <input type="text" id="companyField" name="company" style="display:none">
+  <!-- Honeypot (anti-spam) -->
+  <input
+    type="text"
+    name="company"
+    tabindex="-1"
+    autocomplete="off"
+    style="display:none"
+  />
 
-  <button id="contactSubmit" type="submit">Send Message</button>
-  <p id="contactStatus"></p>
+  <!-- Optional subject -->
+  <input type="hidden" name="_subject" value="New Web Genisis Contact Form" />
+
+  <!-- Redirect after success -->
+  <input type="hidden" name="_redirect" value="index.html?submitted=true" />
+
+  <button type="submit" id="contactSubmit">Send Message</button>
+
 </form>
 
     <!-- Thank You Message (Hidden by default) -->
