@@ -364,5 +364,58 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+  <div id="floating-react-contact"></div>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script>
+const FloatingContactButton = () => {
+  const handleClick = () => {
+    window.location.href = "contact.html";
+    // or scroll:
+    // document.getElementById("contact").scrollIntoView({ behavior: "smooth" });
+  };
+
+  return React.createElement(
+    "button",
+    {
+      onClick: handleClick,
+      style: styles.button,
+      onMouseOver: e => e.target.style.transform = "scale(1.08)",
+      onMouseOut: e => e.target.style.transform = "scale(1)"
+    },
+    "Contact"
+  );
+};
+
+const styles = {
+  button: {
+    position: "fixed",
+    bottom: "28px",
+    right: "28px",
+    zIndex: "9999",
+
+    padding: "14px 22px",
+    fontSize: "15px",
+    fontWeight: "600",
+
+    borderRadius: "999px",
+    border: "none",
+    cursor: "pointer",
+
+    background: "linear-gradient(135deg, #4f46e5, #6d28d9)",
+    color: "#ffffff",
+
+    boxShadow: "0 12px 28px rgba(79,70,229,0.45)",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease"
+  }
+};
+
+const root = ReactDOM.createRoot(
+  document.getElementById("floating-react-contact")
+);
+root.render(React.createElement(FloatingContactButton));
+</script>
+
+
 </body>
 </html>
